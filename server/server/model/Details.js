@@ -2,6 +2,10 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose 
 
 const detailSchema = new Schema({
+    userId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Posts"
+    },
     linkGithub: {
         type: String,
         required: true
