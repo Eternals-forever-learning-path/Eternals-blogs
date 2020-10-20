@@ -2,26 +2,22 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema 
 
 const detailSchema = new Schema({
-    // linkGithub: {
-    //     type: String,
-    //     // required: true
-    // },
+    linkGithub: {
+        type: String,
+    },
+    linkLinkedIn: {
+        type: String, 
+    },
+    linkPersonal:{
+        type: String, 
+    },
+    image: {
+        type: String,
+    },
     posts_id:{
         type: Schema.Types.ObjectId,
         ref: 'Posts'
     },
-    
-    // linkLinkedIn: {
-    //     type: String,
-    //     // required: true 
-    // },
-    // linkPersonal:{
-    //     type: String,
-    //     // required: true
-    // },
-    // image: {
-    //     type: String
-    // },
     uniqueName: {
         type: String,
         required: true

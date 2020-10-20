@@ -2,38 +2,49 @@ const mongoose = require('mongoose')
 
 const resolvers = {
     Query: {
-      posts: async (parent, args, { Posts } ) => {
+      posts: async (_, args, { Posts } ) => {
         const posts = await Posts.find()
-        console.log("POSTS: ", posts)
         return posts
       },
 
-      detail: async(parent, args, { Details }) => {
-          const detail = await Details.find()
-          return detail
+      detail: async(_, args, { Details }) => {
+        const detail = await Details.find()
+        return detail
+      },
+
+      blogtype: async(_, { blogType }, { Details, Posts}) => {
+        const blogTypes = await Posts.find({ blogType: blogType}) 
+        console.log("blogTypes: ",blogTypes)
+        return blogTypes
       }
     },
 
     Mutation: {
-      createDetails: async(_, args, { Details }) => {
-        const existName = await Details.findOne({ uniqueName: args.newDetailInput.uniqueName})
+      createDetails: async(_, { data }, { Details }) => {
+        const existName = await Details.findOne({ uniqueName: data.uniqueName})
         if(existName) {
           throw new Error('Unique Name exists')
         }
 
-        const newDetails = new Details(args.newDetailInput)
+        const newDetails = new Details(data)
         const detail = await newDetails.save()
 
         return detail
       }, 
 
-      createPosts: async(_, args, { Posts, Details }) => {
-        const existName = await Details.findOne({ uniqueName: args.newPostInput.uniqueName})
+      createPosts: async(_, { data }, { Posts, Details }) => {
+        const existName = await Details.findOne({ uniqueName: data.uniqueName})
         if(!existName){
            throw new Error("The Unique Name is not found")
         }
 
-        const newPost = new Posts({ author_id: existName._id , title: args.newPostInput.title, blogType: args.newPostInput.blogType })
+        const newPost = new Posts({ 
+          author_id: existName._id, 
+          title: data.title, 
+          blogType: data.blogType, 
+          description: data.description, 
+          image: data.image,
+        })
         const post = await newPost.save()
 
         return post
@@ -41,8 +52,8 @@ const resolvers = {
     },
 
     Details: {
-      posts: async(parents, args, { Details, Posts}) => {
-        const posts =  await Posts.find({ author_id: parents.id})
+      posts: async({ id }, args, { Posts }) => {
+        const posts = await Posts.find({ author_id: id})
         if(!posts){
           throw new Error("posts error")
         }
@@ -51,10 +62,20 @@ const resolvers = {
     },
 
     Posts: {
-      author: async(parents, args, {Details, Posts}) => {
-        var author =  await Details.findById(mongoose.Types.ObjectId(parents.author_id))
+      author: async({ author_id }, args, { Details }) => {
+        var author =  await Details.findById(mongoose.Types.ObjectId(author_id))
         if(!author) {
-            throw new Error('Error')
+            throw new Error('author Error')
+        }
+        return author
+      }
+    },
+
+    BlogType: {
+      author: async({ author_id }, args, { Details }) => {
+        var author =  await Details.findById(mongoose.Types.ObjectId(author_id))
+        if(!author) {
+            throw new Error('author Error')
         }
         return author
       }
