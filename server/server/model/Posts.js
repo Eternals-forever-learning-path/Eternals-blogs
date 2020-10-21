@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { Schema } = mongoose 
+const Schema = mongoose.Schema
 
 const postSchema = new Schema({
     title: {
@@ -17,13 +17,9 @@ const postSchema = new Schema({
         type: String,
         required: true
     },
-    name:{
-        type: String,
-        required: true
-    },
-    college: {
-        type: String,
-        required: true
+    author_id: {
+        type: Schema.Types.ObjectId,
+        ref: 'Details'
     }
 },{
     timestamps: true,

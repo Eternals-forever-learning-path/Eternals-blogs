@@ -1,26 +1,35 @@
 const mongoose = require('mongoose')
-const { Schema } = mongoose 
+const Schema = mongoose.Schema 
 
 const detailSchema = new Schema({
-    userId:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Posts"
-    },
     linkGithub: {
         type: String,
-        required: true
     },
     linkLinkedIn: {
-        type: String,
-        required: true 
+        type: String, 
     },
     linkPersonal:{
+        type: String, 
+    },
+    image: {
+        type: String,
+    },
+    posts_id:{
+        type: Schema.Types.ObjectId,
+        ref: 'Posts'
+    },
+    uniqueName: {
         type: String,
         required: true
     },
-    image: {
-        type: String
-    }
+    name:{
+        type: String,
+        required: true
+    },
+    college: {
+        type: String,
+        required: true
+    },
 })  
 
 module.exports = mongoose.model("Details", detailSchema) 

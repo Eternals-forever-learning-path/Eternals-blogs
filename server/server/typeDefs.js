@@ -2,27 +2,49 @@ const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
   type Query {
-    hello: String
-    posts: Posts!
-    details: Details
+    posts: [Posts!]!
+    detail: [Details!]!
+    blogtype( blogType: String ): [BlogType!]!
   },
 
   type Mutation {
-    newPosts( newPostInput: PostInput! ): Posts!
-    newDetails( newDetailInput: DetailInput ): Details
+    createDetails( data: DetailInput! ): Details!
+    createPosts( data: PostInput! ): Posts!
   },
-  
-  type Posts {
-    id: ID!
+
+  type BlogType {
     title: String!
-    Description: String!
-    image: String
-    name: String!
-    college: String!
+    author_id: ID!
+    createdAt: String!
+    author: Details!
   }
 
   type Details {
-    id: ID!
+    id: ID
+    # uniqueName: String
+    name: String!
+    college: String!
+    linkGithub: String
+    linkLinkedIn: String
+    linkPersonal: String
+    image: String
+    posts: [Posts!]
+  }
+
+  type Posts {
+    id: ID
+    # uniqueName: String
+    title: String!
+    description: String!
+    blogType: String!
+    author_id: ID!
+    author: Details!
+  }
+
+  input DetailInput{
+    uniqueName: String!
+    name: String!
+    college: String!
     linkGithub: String
     linkLinkedIn: String
     linkPersonal: String
@@ -31,19 +53,12 @@ const typeDefs = gql`
 
   input PostInput {
     title: String!
-    Description: String!
-    image: String
-    name: String!
-    college: String!
-  }
-
-  input DetailInput {
-    linkGithub: String
-    linkLinkedIn: String
-    linkPersonal: String
+    blogType: String!
+    uniqueName: String!
+    description: String!
     image: String
   }
-
+    
 `;
 
 module.exports = typeDefs
